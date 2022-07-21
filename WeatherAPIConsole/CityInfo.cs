@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace WeatherAPIConsole
 {
+    /// <summary>
+    /// Holds the weather history data for a city. This data is provided by requesting a json from the weatherapi.com and deserializing the json fields into an instance of this class.
+    /// </summary>
     public class CityInfo
     {
         [JsonPropertyName("location")] public Location Location { get; set; }
