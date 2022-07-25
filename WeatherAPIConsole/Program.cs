@@ -11,6 +11,7 @@ namespace WeatherAPIConsole
         static void Main(string[] args)
         {
             string currentDirectory = Directory.GetCurrentDirectory();
+            int dayCount = 3;
 
             // Read the API key from the key.txt file.
             // So the API key is not accessible by strangers from the public repository.
@@ -28,8 +29,8 @@ namespace WeatherAPIConsole
 
             // Dates used to query the last 3 days.
             DateTime today = DateTime.Today;
-            string requestStartDate = today.AddDays(-3).ToString("yyyy-MM-dd");
-            string requestEndDate = today.AddDays(-1).ToString("yyyy-MM-dd");
+            string requestStartDate = today.AddDays(-dayCount).ToString("yyyy-MM-dd");
+            string requestEndDate = today.AddDays(-dayCount + 2).ToString("yyyy-MM-dd");
 
 
             string outputPath = Path.Combine(currentDirectory, "outputForecast.csv");
@@ -61,11 +62,20 @@ namespace WeatherAPIConsole
                         continue;
                     }
 
+                    double avgMinTemp = 0;
+                    double avgMaxTemp = 0;
                     foreach (ForecastDay day in cityInfo.Forecast.ForecastDays)
                     {
                         writer.WriteLine(
                             $"{cityInfo.Location.Country},{cityInfo.Location.Name},{day.Astro.Sunrise.Replace(" ", "")},{day.Astro.Sunset.Replace(" ", "")},{day.Day.MinTemp},{day.Day.MaxTemp}");
+                        avgMinTemp += day.Day.MinTemp;
+                        avgMaxTemp += day.Day.MaxTemp;
                     }
+
+                    // Print the averages values of min and max temperature.
+                    avgMinTemp /= dayCount;
+                    avgMaxTemp /= dayCount;
+                    writer.WriteLine($"{cityInfo.Location.Country},{cityInfo.Location.Name},,,{Math.Round(avgMinTemp, 1)},{Math.Round(avgMaxTemp, 1)}");
                 }
             }
         }
