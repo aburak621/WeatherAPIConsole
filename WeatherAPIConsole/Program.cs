@@ -48,15 +48,15 @@ namespace WeatherAPIConsole
                     RestRequest request = new RestRequest();
                     RestResponse response = client.Execute(request);
 
-                    CityInfo? cityInfo = JsonSerializer.Deserialize<CityInfo>(response.Content ?? string.Empty);
-
-                    if (cityInfo is null)
+                    if (response.Content is null)
                     {
                         Console.WriteLine($"Weather API failed to response for the city {city}!");
                         continue;
                     }
 
-                    if (cityInfo.Location is null)
+                    CityInfo? cityInfo = JsonSerializer.Deserialize<CityInfo>(response.Content);
+
+                    if (cityInfo?.Location is null || cityInfo?.Forecast is null)
                     {
                         Console.WriteLine($"{city} is not a valid city name.");
                         continue;
